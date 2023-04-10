@@ -80,32 +80,38 @@ end
 
 function roll_bonus()
 	--track # of days up to 30
+	local roll_count = 0
+	return function ()
+		if roll_count < 30 then roll_count = rollcount + 1 end
+		return roll_count --closure to keep track of bonus up to 30
+	end
 end
 
-function roll_weeks()
-	rolls = {}
-	for i = 1, weeks do
-		rolls[i] = roll(100)
+function roll_days()
+	local rolls = {}
+	local bonus = roll_bonus()
+	for i = 1, days do
+		rolls[i] = roll(100) + bonus 
 	end
 	return rolls
 end
 
-function line_weeks()
+function line_days()
+	local lines = lines_from(file)
+	local bonus = roll_bonus()
 	for i, v in ipairs(lines) do
-		--need to count up weeks and 
+		lines[i] = tonumber(v) + bonus
 	end
+	return lines
 end
 
 function check_rolls()
 	local sum = 0
 	local values = {}
-	if params.file ~= nil then local lines = lines_from(file) end
-	if lines == nil then --if the user does not provide a file of rolls, roll for them
-		values = roll_weeks()
+	if file ~= nil then
+		local values = line_days()
 	else
-		for i, v in ipairs(lines) do
-			values[i] = tonumber(v)
-		end
+		values = roll_days()
 	end
 
 	for _, value in ipairs(values) do
