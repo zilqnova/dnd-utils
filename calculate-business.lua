@@ -32,11 +32,12 @@ end
 
 local flags_paired = {"-b", "-c", "-d", "-f", "-w",} --if an argument without a following value is ever added, the flag will not appear in this table
 for k, v in pairs(params) do
-	if not string.match(table.unpack(flags_paired), k) then
-		print_help("Argument not recognized")
-	end
-	if string.match(table.unpack(flags_paired), v) then
-		print_help("An argument is missing a value")
+	for _, w in ipairs(flags_paired) do
+		if string.match(w, k) == nil then
+			print_help("Argument not recognized")
+		elseif string.match(w, v) ~= nil then
+			print_help("An argument is missing a value")
+		end
 	end
 end
 
