@@ -86,25 +86,23 @@ end
 function debt_penalty() --use an instance of this closure in check_rolls() to dynamically update a new total bonus
 	local penalty_count = 0
 	return function ()
-		penalty_count = penalty_count - 10
+		penalty_count = penalty_count + 10
 		return penalty_count
 	end
 end
 
 function roll_days()
 	local rolls = {}
-	local bonus = roll_bonus()
 	for i = 1, days do
-		rolls[i] = roll(100) + bonus() 
+		rolls[i] = roll(100) 
 	end
 	return rolls
 end
 
 function line_days()
 	local lines = lines_from(file)
-	local bonus = roll_bonus()
 	for i, v in ipairs(lines) do
-		lines[i] = tonumber(v) + bonus()
+		lines[i] = tonumber(v)
 	end
 	return lines
 end
@@ -117,8 +115,11 @@ function check_rolls()
 	else
 		local values = roll_days()
 	end
-
+	local bonus = roll_bonus()
+	local penalty = debt_penalty()
 	for _, value in ipairs(values) do --table from dmg p.128
+		value = value + bonus()
+		if balance <= 0 then value = value - penalty() end
 		if value >= 1 and value <= 20 then
 			sum = sum + (weekly_cost * -1.5)
 		elseif value >= 21 and value <= 30 then
