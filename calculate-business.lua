@@ -83,9 +83,17 @@ function roll_bonus()
 	end
 end
 
+function debt_penalty() --use an instance of this closure in check_rolls() to dynamically update a new total bonus
+	local penalty_count = 0
+	return function ()
+		penalty_count = penalty_count - 10
+		return penalty_count
+	end
+end
+
 function roll_days()
 	local rolls = {}
-	local bonus = roll_bonus() --arithmetic error
+	local bonus = roll_bonus()
 	for i = 1, days do
 		rolls[i] = roll(100) + bonus() 
 	end
@@ -120,11 +128,11 @@ function check_rolls()
 		elseif value >= 41 and value <= 60 then
 			goto continue
 		elseif value >= 61 and value <= 80 then
-			sum = sum + ((roll(6) * 5)/10) --1d6 * 5 /10 to adjust for my campaign
+			sum = sum + ((roll(6) * 5)/10)
 		elseif value >= 81 and value <= 90 then
-			sum = sum + ((roll(8, 2) * 5)/10) --2d8 * 5sp
+			sum = sum + ((roll(8, 2) * 5)/10)
 		elseif value >= 91 then
-			sum = sum + ((roll(10, 3) * 5)/10) --3d10 * 5sp
+			sum = sum + ((roll(10, 3) * 5)/10)
 		end
 		balance = balance + sum
 		::continue::
