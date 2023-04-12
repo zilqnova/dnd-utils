@@ -16,17 +16,9 @@ function match_whole_pattern(input, pattern)
 end
 
 if #arg == 0 or string.match(table.unpack(arg), "-h") then print_help() end
-local flags_unpaired = {"-v",}
 local flags_paired = {"-b", "-c", "-d", "-f", "-w", "--divisor"}
 local params = {}
 for i = 1, #arg, 2 do
-	local unpaired = false
-	for _, v in ipairs(flags_unpaired) do
-		if match_whole_pattern(arg[i], v) ~= nil then unpaired = true end
-	end
-	if unpaired == true then
-		table.insert(arg, i+1, true)
-	end
 	params[arg[i]] = arg[i+1]
 end
 
@@ -59,7 +51,7 @@ local weeks = params["-w"] or 1
 local days = tonumber(params["-d"]) or (tonumber(weeks) * 7)
 local file = params["-f"]
 local divisor = tonumber(params["--divisor"]) or 1
-local verbose = params["-v"] or false
+--local verbose = params["-v"] or false
 
 function file_exists(file)
 	local f = io.open(file, "rb")
@@ -129,7 +121,7 @@ function check_rolls()
 	else
 		values = roll_days()
 	end
-	if verbose == true then io.write("Values: ", table.unpack(values), "\n") end
+	--if verbose == true then io.write("Values: ", table.unpack(values), "\n") end
 	local bonus = roll_bonus()
 	local penalty = debt_penalty()
 	for _, v in ipairs(values) do --table from dmg p.129
@@ -159,7 +151,7 @@ function check_rolls()
 		end
 		balance = balance + cost_profit
 		::continue::
-		if verbose == true then io.write("Current iteration: ", _, "\tCurrent value: ", value, "\tCurrent sum: ", sum, "\tCurrent balance: ", balance, "\tCurrent cost or profit: ", cost_profit, "\n") end
+		--if verbose == true then io.write("Current iteration: ", _, "\tCurrent value: ", value, "\tCurrent sum: ", sum, "\tCurrent balance: ", balance, "\tCurrent cost or profit: ", cost_profit, "\n") end
 	end
 	return sum, balance
 end
