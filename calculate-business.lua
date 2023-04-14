@@ -1,3 +1,4 @@
+#!/bin/lua
 --A script to calculate total business earnings (and losses) in D&D 5e
 math.randomseed(os.time())
 
